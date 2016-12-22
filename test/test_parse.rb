@@ -2,7 +2,7 @@ require 'test/unit'
 require 'pp'
 require 'yaml'
 
-require_relative '../lib/to_yaml_lib'
+require_relative '../lib/parse'
 
 Dir.chdir "test/"
 

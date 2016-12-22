@@ -48,3 +48,12 @@ build-iPhoneSimulator/
 
 # unless supporting rvm < 1.11.0 or doing something fancy, ignore this:
 .rvmrc
+
+.*swp
+.*swo
+Gemfile.lock
+講義室予約_files/
+vendor/
+html/*/
+config.yaml
+test.html

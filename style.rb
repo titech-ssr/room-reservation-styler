@@ -8,11 +8,11 @@ ARGV << '--help' if ARGV.empty?
 
 OptionParser.new.instance_eval do
   %w[
-  -a              asciidoc\ format
-  -h              styled\ html
-  -y\             yaml\ fomat
-  -g\ config.yaml send\ to\ google\ calender
-  -c\ cond.rb     cond
+  -a\ circle\ name asciidoc\ format
+  -h               styled\ html
+  -y\              yaml\ fomat
+  -g\ config.yaml  send\ to\ google\ calender
+  -c\ cond.rb      cond
   ].each_slice(2){|ar| on(*ar)}
 
   parse(ARGV)

@@ -43,7 +43,7 @@ def date_room_pair(html)
   trs   = html.css("table.table.table-bordered.ui-selectable tbody tr")
   trs.select{|n| Oga::XML::Element === n}.inject([{}, nil]){|(h,day), tr|
     if date_node = tr.at_xpath("td/h5") then
-      day = Date.parse(date_node.text)
+      day = DateTime.parse(date_node.text)
     else
       next([h, day]) unless day
       h[day] = (h[day]||[]) << tr

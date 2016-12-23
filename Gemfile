@@ -4,3 +4,6 @@ source "https://rubygems.org"
 gem "oga"
 gem "test-unit"
 gem "rake"
+gem "google-api-client"
+gem "googleauth"
+

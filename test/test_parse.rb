@@ -22,14 +22,14 @@ class To_yaml_test < Test::Unit::TestCase
   end
 
   test "date room pair, date test" do
-    date_room_pair(Conf::HTML).each{|key, val|
-      assert_equal(Date, key.class)
+    date_room_pair(Conf::HTML, {timezone:'JST'}).each{|key, val|
+      assert_equal(DateTime, key.class)
     }
   end
 
   test "select_room_reservs test" do
     f = ->(room:"", circle:"", responsible:"", start:1, range:1){ circle == Conf::Config[:circle] }
-    pair = date_room_pair(Conf::HTML).map{|date, rooms|
+    pair = date_room_pair(Conf::HTML, {timezone:'JST'}).map{|date, rooms|
       [date, rooms.map{|room| select_room_reservs(room, f)}.to_h]
     }.to_h.each{|date, rooms|
       rooms.each do |room, resvs|

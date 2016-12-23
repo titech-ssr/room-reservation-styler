@@ -57,4 +57,5 @@ vendor/
 html/*/
 html/*
 config.yaml
-test.html
+test.*
+*secret*

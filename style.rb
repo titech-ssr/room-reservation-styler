@@ -11,7 +11,7 @@ OptionParser.new.instance_eval do
   -a\ circle\ name asciidoc\ format
   -h               styled\ html
   -y\              yaml\ fomat
-  -g\ config.yaml  send\ to\ google\ calender
+  -g\ config.yaml  send\ to\ google\ calendar
   -c\ cond.rb      cond
   ].each_slice(2){|ar| on(*ar)}
 

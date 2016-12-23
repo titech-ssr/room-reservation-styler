@@ -55,5 +55,6 @@ Gemfile.lock
 講義室予約_files/
 vendor/
 html/*/
+html/*
 config.yaml
 test.html

@@ -7,7 +7,7 @@ require_relative '../lib/parse'
 Dir.chdir "test/"
 
 class Conf
-  HTML    = Oga.parse_html(File.read("html/test.html"))
+  HTML    = Oga.parse_html(File.read("test.html")) rescue (->(){puts $!; exit 1}).()
   Config  = YAML.load_file("config.yaml")
 end
 
@@ -34,11 +34,15 @@ class To_yaml_test < Test::Unit::TestCase
     }.to_h.each{|date, rooms|
       rooms.each do |room, resvs|
         assert_equal(Room, room.class)
-        resvs.each{|resv| assert_equal(Conf::Config[:circle], resv.circle)}
+        resvs.each{|resv| 
+          assert_equal(Conf::Config[:circle], resv.circle)    # test circle name
+          assert_true(1 <= resv.start && resv.start <= 13)    # test start class time
+          assert_true(0 <= resv.range && resv.range <= 12)    # test class range
+        }
       end
     }
 
-    puts pair.to_yaml
+    #puts pair.to_yaml
   end
     
 

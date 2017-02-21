@@ -6,7 +6,9 @@ require 'date'
 require_relative 'datadef'
 
 # select room preservations
-# @param html [Oga]
+#
+# @param [Oga] tr tbody > tr that has room preservations 
+# @return [void]
 def select_room_reservs(tr, is_target)
   room  = Room.new(
     room: tr.at_xpath("td/span[@class='showAtPrint']/span").text,
@@ -39,17 +41,23 @@ end
 
 # Make date room pair from html
 # @param html [Oga]
+# @param config [Hash] config should be a Hash for ex. { :timezone => "JST" }
+# @return [Hash] returns { date => [rooms] } pair
 def date_room_pair(html, config)
+
   trs   = html.css("table.table.table-bordered.ui-selectable tbody tr")
-  trs.select{|n| Oga::XML::Element === n}.inject([{}, nil]){|(h,day), tr|
-    if date_node = tr.at_xpath("td/h5") then
-      day = DateTime.parse(date_node.text + " 0:00 #{config[:timezone]}")
-    else
-      next([h, day]) unless day
-      h[day] = (h[day]||[]) << tr
-    end
-    [h, day]
-  }.first
+  trs
+    .select{|n| Oga::XML::Element === n}
+    .inject([{}, nil]){|(h,date), tr|
+      if date_node = tr.at_xpath("td/h5") then
+        date = DateTime.parse(date_node.text + " 0:00 #{config[:timezone]}")
+      else
+        next([h, date]) unless date
+        h[date] = (h[date]||[]) << tr
+      end
+      [h, date]
+    }
+    .first
 end
 
 

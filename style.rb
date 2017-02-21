@@ -11,7 +11,7 @@ args =  OptionParser.new.instance_eval {
   -a\ config.yaml  asciidoc\ format
   -h               styled\ html
   -y\ config.yaml  yaml\ fomat
-  -g\ config.yaml  send\ to\ google\ calendar
+  -g\ rooms.yaml   send\ to\ google\ calendar
   -c\ cond.rb      cond
   ].each_slice(2){|ar| on(*ar)}
 
@@ -22,11 +22,16 @@ opt = ARGV.getopts("a:hy:c:g:")
 
 require 'oga'
 
-
+# format HTML
 if opt[?h] then
+  
   html = Oga.parse_html(ARGF.read)
   puts html.to_xml
-elsif conf = opt[?y] then require_relative 'lib/parse.rb'
+
+# output room reservation list as yaml from HTML
+elsif conf = opt[?y] then 
+  require_relative 'lib/parse.rb'
+
   html = Oga.parse_html(ARGF.read)
   f = if (file = File.exist?(opt[?c].to_s)) then
         eval(File.read(file))
@@ -38,9 +43,12 @@ elsif conf = opt[?y] then require_relative 'lib/parse.rb'
   }.to_h
 
   puts pair.to_yaml
+
+# output room reservation list as asciidoc from HTML
 elsif conf = opt[?a] then
  require_relative 'lib/parse.rb'
  require_relative 'lib/to_adoc'
+
   html = Oga.parse_html(ARGF.read)
   f = if (file = File.exist?(opt[?c].to_s)) then
         eval(File.read(file))
@@ -51,31 +59,40 @@ elsif conf = opt[?a] then
     [date, rooms.map{|room| select_room_reservs(room, f)}.to_h]
   }.to_h
   puts to_adoc(hash: pair, circle: opt[?a])
+
+# send room reservation yaml to google calendar
 elsif conf = opt[?g] then
 
-h=if (file=args.first) =~ /.+\.html/ then
-    require_relative 'lib/parse.rb'
-    html = Oga.parse_html(File.read(file))
-    f = if (file = File.exist?(opt[?c].to_s)) then
+  # { date => [rooms] }
+  h = 
+    if (file=args.first) =~ /.+\.html/ then
+      require_relative 'lib/parse.rb'
+
+      html = Oga.parse_html(File.read(file))
+      f = 
+        if (file = File.exist?(opt[?c].to_s)) then
           eval(File.read(file))
         else
           ->(room:"", circle:"", responsible:"", start:1, range:1){ true }
         end
-    pair = date_room_pair(html, YAML.load_file(conf)).map{|date, rooms|
-      [date, rooms.map{|room| select_room_reservs(room, f)}.to_h]
-    }.to_h
-  elsif file =~ /.+\.yaml/ then
-    require 'yaml'
-    require_relative 'lib/datadef'
-    YAML.load_file(file) 
-  else
-    $stderr.puts "Format error"
-    exit 1
-  end
+
+      date_room_pair(html, YAML.load_file(conf)).map{|date, rooms|
+        [date, rooms.map{|room| select_room_reservs(room, f)}.to_h]
+      }.to_h
+
+    elsif file =~ /.+\.yaml/ then
+      require 'yaml'
+      require_relative 'lib/datadef'
+      YAML.load_file(file) 
+    else
+      $stderr.puts "Format error"
+      exit 1
+    end
 
   config = YAML.load_file(conf)
 
   require_relative 'lib/calendar'
+
   hash = h.map{|date, rooms|
     [
       date, 
@@ -110,6 +127,7 @@ h=if (file=args.first) =~ /.+\.html/ then
 ==================
 
 CAL
+
   sleep 0.5
 
   require_relative 'lib/calelib'

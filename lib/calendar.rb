@@ -11,8 +11,15 @@ require 'googleauth/stores/file_token_store'
 require_relative 'calelib'
 require_relative 'datadef'
 
+# Time zone
 TZ = "Japan"
 
+# Generate query to send to Google calendar from date, rooms, class start time and range
+#
+# @param [DateTime] date reservation date
+# @param [Array<Room>] rooms rooms
+# @param [Fixnum] start class start time
+# @param [Fixnum] range class range
 def to_query(date:nil, rooms:[], start:1, range:1)
   start_ = Times::Start[start].split(?:).map(&:to_i)
   fin_   = Times::Fin[start + range - 1].split(?:).map(&:to_i)

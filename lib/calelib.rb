@@ -6,21 +6,23 @@ require 'googleauth/stores/file_token_store'
 
 require 'fileutils'
 
+# Google Calendar class
 class GCal
+
 OOB_URI = 'urn:ietf:wg:oauth:2.0:oob'
 APPLICATION_NAME = 'Google Calendar API Ruby Quickstart'
 CLIENT_SECRETS_PATH = 'client_secret.json'
 CREDENTIALS_PATH = File.join(Dir.home, '.credentials',
     "calendar-ruby-quickstart.yaml")
-#SCOPE = Google::Apis::CalendarV3::AUTH_CALENDAR_READONLY
 SCOPE = Google::Apis::CalendarV3::AUTH_CALENDAR
+#SCOPE = Google::Apis::CalendarV3::AUTH_CALENDAR_READONLY
 
-##
-# Ensure valid credentials, either by restoring from the saved credentials
-# files or intitiating an OAuth2 authorization. If authorization is required,
-# the user's default browser will be launched to approve the request.
-#
-# @return [Google::Auth::UserRefreshCredentials] OAuth2 credentials
+  ##
+  # Ensure valid credentials, either by restoring from the saved credentials
+  # files or intitiating an OAuth2 authorization. If authorization is required,
+  # the user's default browser will be launched to approve the request.
+  #
+  # @return [Google::Auth::UserRefreshCredentials] OAuth2 credentials
   def authorize
     FileUtils.mkdir_p(File.dirname(CREDENTIALS_PATH))
 
@@ -45,22 +47,34 @@ SCOPE = Google::Apis::CalendarV3::AUTH_CALENDAR
     credentials
   end
 
+  # Instantiate Google Calendar class
+  #
+  # @param [Fixnum] id Google Calendar id
   def initialize(id)
-  # Initialize the API
+    # Initialize the API
     @service                = Google::Apis::CalendarV3::CalendarService.new
     @service.client_options.application_name = APPLICATION_NAME
     @service.authorization  = authorize
     @calendar_id            = id
   end
 
+  # Get info from Google Calendar
+  #
+  # @param [?] param 
   def list_events(param)
     response = @service.list_events(@calendar_id, param)
   end
 
+  # Send query to Google Calendar
+  #
+  # @param [Hash] param query
   def insert_event(param)
     @service.insert_event(@calendar_id, Google::Apis::CalendarV3::Event.new(param))
   end
 
+  # Send 終日 query to Google Calendar
+  #
+  # @param [DateTime] date date
   def insert_whole_day(date, summary:nil, description:nil,time_zone:nil)
     insert_event(
       summary:summary, 

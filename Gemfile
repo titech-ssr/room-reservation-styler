@@ -6,4 +6,4 @@ gem "test-unit"
 gem "rake"
 gem "google-api-client"
 gem "googleauth"
-
+gem "yard"

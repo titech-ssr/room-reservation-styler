@@ -5,6 +5,10 @@ require 'date'
 
 require_relative 'datadef'
 
+# Generate room reservation list from { date => [rooms] } hash
+#
+# @param [Hash] hash
+# @param [String] circle name of circle
 def to_adoc(hash:{}, circle:"")
 """
 = 部屋予約

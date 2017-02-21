@@ -1,0 +1,52 @@
+# 講義室予約カレンダー反映自動化
+
+## Requirements
+* MRI
+* bundler
+
+## Setup
+```bash
+$ bundle install --path vendor/bundle
+```
+
+## Usage
+```bash
+$ style [options] resevs.html
+  -a config.yaml  部屋予約をAsciiDoc形式で出力。config.yamlとして設定を与える。
+  -h              HTMLの整形を行う
+  -y config.yaml  部屋予約をYAML形式で出力。config.yamlとして設定を与える。
+  -g rooms.yaml   YAMLから読み込み、部屋予約の反映を行う。
+  -g config.yaml  HTMLから読み込み、部屋予約の反映を行う。config.yamlとして設定を与える。
+  -c cond.rb      部屋をフィルターする関数を記述する。
+```
+
+.config.yaml
+[sources, ruby]
+----
+---
+:calendar_id : 'hoge@group.calendar.google.com'
+:timezone    : 'JST'
+----
+
+.rooms.yaml
+[sources, ruby]
+----
+---
+!ruby/object:DateTime 2017-1-1 00:00:00.000000000 +09:00:
+  ? !ruby/object:Room
+    room: H114
+    url: http://poi.jp/poi.pdf
+  : - !ruby/object:Reservation
+      circle: "popopo"
+      responsible: "rogy ken"
+      start: 1
+      range: 1
+----
+
+.cond.rb
+[sources, ruby]
+----
+->(room:"", circle:"", responsible:"", start:1, range:1){
+  room =~ /H\d{3}/
+}
+----

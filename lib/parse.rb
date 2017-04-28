@@ -12,7 +12,7 @@ require_relative 'datadef'
 def select_room_reservs(tr, is_target)
   room  = Room.new(
     room: tr.at_xpath("td/span[@class='showAtPrint']/span").text,
-    url:  tr.at_xpath("td/span[@class='hideAtPrint']/a").get("href")
+    url:  tr.at_xpath("td/span[@class='hideAtPrint']/a")&.get("href")
   )
 
   reservs = tr.css("td.tdN").map{|reserv| 

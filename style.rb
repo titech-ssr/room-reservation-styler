@@ -33,7 +33,7 @@ elsif conf = opt[?y] then
   require_relative 'lib/parse.rb'
 
   html = Oga.parse_html(ARGF.read)
-  f = if (file = File.exist?(opt[?c].to_s)) then
+  f = if (File.exist?(file = opt[?c].to_s)) then
         eval(File.read(file))
       else
         ->(room:"", circle:"", responsible:"", start:1, range:1){ true }
@@ -50,7 +50,7 @@ elsif conf = opt[?a] then
  require_relative 'lib/to_adoc'
 
   html = Oga.parse_html(ARGF.read)
-  f = if (file = File.exist?(opt[?c].to_s)) then
+  f = if (File.exist?(file = opt[?c].to_s)) then
         eval(File.read(file))
       else
         ->(room:"", circle:"", responsible:"", start:1, range:1){ true }
@@ -85,7 +85,7 @@ elsif conf = opt[?g] then
       require_relative 'lib/datadef'
       YAML.load_file(file) 
     else
-      $stderr.puts "Format error"
+      $stderr.puts "Format error #{file} #{args} #{conf}"
       exit 1
     end
 

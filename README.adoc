@@ -11,7 +11,7 @@ $ bundle install --path vendor/bundle
 
 ## Usage
 ```bash
-$ style [options] resevs.html
+$ style [options] resevs.html (or resevs.yaml)
   -a config.yaml  部屋予約をAsciiDoc形式で出力。config.yamlとして設定を与える。
   -h              HTMLの整形を行う
   -y config.yaml  部屋予約をYAML形式で出力。config.yamlとして設定を与える。
